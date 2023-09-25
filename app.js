@@ -69,14 +69,12 @@ app.post("/webhook", async (req,res) =>{
     if(data.length == 0){
       res.status(200).send('empty payload');
     }
-
     const workflow_step = await getPreviewData(data).then((previewData)=>{
       return previewData.items[0].system.workflow_step;
     }).catch((err)=>{console.log(err)});
 
     const operation = message.operation == 'upsert' || message.operation.includes('draft') ? 'Draft' : message.operation;
-    console.log(`webhook called: ${data.items[0].id}`)
-
+    
     const sql = `Insert INTO content_update(id,type,operation,collection,language,content_type,workflow_step,ktimestamp)Values('${data.items[0].id}', '${data.items[0].type}','${operation}','${data.items[0].collection}', '${data.items[0].language}','${data.items[0].type}','${workflow_step}','${message.created_timestamp}');`+"\n";
     fs.appendFile("activityBatch.sql",sql, err => {
       if (err) {
@@ -87,7 +85,6 @@ app.post("/webhook", async (req,res) =>{
 
     if(workflow_step == 'published')
     {
-      console.log('called for published')
         const deliverData = await getDeliverData(data).then((responseData)=>{
           return responseData
         }).catch((err)=>{console.log(err)});
