@@ -1,4 +1,4 @@
-# Kontentai_webhoook
+# Kontent.ai Webhoook
 
 This is a sample code developed for Outerbase Hackathon host at https://hashnode.com/
 
